@@ -1,5 +1,5 @@
 def validar_valor(valor):
-    """Garante que o gasto seja um número positivo."""
+    """Garantia de que o gasto seja um número positivo."""
     if not isinstance(valor, (int, float)):
         raise ValueError("O valor deve ser um número.")
     if valor <= 0:
