@@ -15,11 +15,11 @@ def main():
                 adicionar_gasto(gastos, desc, val)
                 print("✅ Registrado!")
             except ValueError as e:
-                print(f"❌ Erro: {e}")
+                print(f"Erro: {e}")
 
         elif opcao == "2":
             total = calcular_total(gastos)
-            print(f"\n💰 Total acumulado: R$ {total:.2f}")
+            print(f"\n Total acumulado: R$ {total:.2f}")
             for g in gastos:
                 print(f" • {g['descricao']}: R$ {g['valor']:.2f}")
 
