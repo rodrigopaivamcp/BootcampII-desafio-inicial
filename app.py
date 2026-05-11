@@ -33,3 +33,5 @@ if st.session_state.gastos:
     cotacao = buscar_cotacao_dolar()
     if cotacao:
         st.metric("Total em Dólar", f"US$ {total/cotacao:.2f}", help=f"Cotação: {cotacao}")
+    else:
+        st.warning("Não foi possível carregar a cotação do dólar agora. Tente atualizar a página.")

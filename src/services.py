@@ -3,7 +3,7 @@ import requests
 def buscar_cotacao_dolar():
     url = "https://economia.awesomeapi.com.br/last/USD-BRL"
     headers = {
-        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
     }
     
     try:
