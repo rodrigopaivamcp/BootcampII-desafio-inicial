@@ -31,7 +31,8 @@ if st.session_state.gastos:
     
     # Integração com a API
     cotacao = buscar_cotacao_dolar()
-    if cotacao:
-        st.metric("Total em Dólar", f"US$ {total/cotacao:.2f}", help=f"Cotação: {cotacao}")
-    else:
-        st.warning("Não foi possível carregar a cotação do dólar agora. Tente atualizar a página.")
+if cotacao:
+    valor_dolar = valor_reais / cotacao
+    st.write(f"Valor em Dólar: $ {valor_dolar:.2f}")
+else:
+    st.error("Cotação indisponível no momento.")
