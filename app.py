@@ -20,8 +20,11 @@ if st.button("Adicionar Gasto"):
 if st.session_state.gastos:
     st.subheader("Seus Lançamentos")
     for g in st.session_state.gastos:
-        st.write(f"- {g['nome']}: R$ {g['valor']:.2f}")
-    
+        # Tenta achar 'nome' ou 'descricao'. Se não achar nenhum, usa "Item"
+        desc = g.get('nome') or g.get('descricao') or "Item"
+        # Tenta achar 'valor' ou 'preco'. Se não achar nenhum, usa 0.0
+        vlr = g.get('valor') or g.get('preco') or 0.0
+        st.write(f"- {desc}: R$ {vlr:.2f}")
     total = calcular_total(st.session_state.gastos)
     st.divider()
     st.metric("Total em Reais", f"R$ {total:.2f}")
