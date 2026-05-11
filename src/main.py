@@ -1,3 +1,4 @@
+from services import buscar_cotacao_dolar
 from core import adicionar_gasto, calcular_total
 
 def main():
@@ -19,9 +20,19 @@ def main():
 
         elif opcao == "2":
             total = calcular_total(gastos)
-            print(f"\n Total acumulado: R$ {total:.2f}")
-            for g in gastos:
-                print(f" • {g['descricao']}: R$ {g['valor']:.2f}")
+            print(f"\n--- Resumo de Gastos ---")
+            print(f"Total em Reais: R$ {total:.2f}")
+            
+           
+            print("Consultando cotação do dólar...")
+            cotacao = buscar_cotacao_dolar()
+            
+            if cotacao:
+                total_usd = total / cotacao
+                print(f"Total convertido: US$ {total_usd:.2f} (Cotação: {cotacao:.2f})")
+            else:
+                print("Não foi possível converter para dólar no momento.")
+           
 
         elif opcao == "3":
             print("Até logo!")
