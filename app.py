@@ -25,7 +25,7 @@ cotacao = buscar_cotacao_dolar_direto()
 
 if cotacao is None:
     cotacao = 5.15 
-    st.warning(" Nota: A API de cotação está instável. Usando valor padrão de R$ 5,15.")
+    st.warning(" Nota: Caso a A API de cotação esteja instável, usando valor padrão de R$ 5,15.")
 else:
     st.success(f" Cotação obtida: R$ {cotacao:.2f}")
 
