@@ -4,7 +4,7 @@ Sistema simples em Python para controle financeiro, desenvolvido como desafio t�
 
 ## 🚀 Como Executar
 1. Instale as dependências: `pip install -r requirements.txt`
-2. Execute o programa: `python src/main.py`
+2. Execute o programa: `streamlit run app.py`
 3. Link do app: https://bootcampii-desafio-inicial-j6gtfxfhatgwlzgekkpqpu.streamlit.app/
 
 ## 🧪 Como Rodar os Testes
