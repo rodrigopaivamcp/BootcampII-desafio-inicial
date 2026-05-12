@@ -1,63 +1,86 @@
 import streamlit as st
 import requests
 
-# Configuração da página (opcional, deixa o app mais bonito)
-st.set_page_config(page_title="Controle de Gastos")
+# Configuração da página
+st.set_page_config(page_title="Gestor de Gastos em Dólar", layout="wide")
 
-@st.cache_data(ttl=3600)  # Guarda a cotação por 1 hora para evitar erro 429
-def buscar_cotacao_dolar_direto():
+# 1. Inicialização do "Banco de Dados" temporário (Session State)
+if 'lista_gastos' not in st.session_state:
+    st.session_state.lista_gastos = []
+
+@st.cache_data(ttl=3600)
+def buscar_cotacao():
     try:
         url = "https://economia.awesomeapi.com.br/last/USD-BRL"
         headers = {'User-Agent': 'Mozilla/5.0'}
         response = requests.get(url, headers=headers, timeout=10)
-        
         if response.status_code == 200:
-            dados = response.json()
-            return float(dados["USDBRL"]["bid"])
-        
-        return None  # Retorna None se a API der erro (ex: 429)
-    except Exception:
+            return float(response.json()["USDBRL"]["bid"])
+        return None
+    except:
         return None
 
-# --- INTERFACE DO APP ---
+# --- TÍTULO E COTAÇÃO ---
+st.title(" Gestor de Gastos Multitens")
 
-st.title(" Controle de Gastos (Versão Final)")
-st.markdown("Converta seus gastos de Reais para Dólares de forma simples.")
-
-# 1. Entrada do Nome do Produto
-item_nome = st.text_input("O que você comprou?", placeholder="Ex: Monitor, Assinatura de Software, Jantar...")
-
-# 2. Entrada do Valor em Reais
-valor_reais = st.number_input("Valor pago em Reais (R$)", min_value=0.0, step=0.01)
-
-st.divider() # Linha separadora visual
-
-# 3. Lógica de Cotação e Cálculo
-if valor_reais > 0:
-    cotacao = buscar_cotacao_dolar_direto()
-    
-    # Verifica se a API funcionou ou se usamos o Fallback
-    if cotacao is None:
-        cotacao = 5.15 
-        st.warning(" Caso a API esteja instável, usando valor fixo de R$ 5,15 para o cálculo.")
-    else:
-        st.success(f" Cotação obtida em tempo real: R$ {cotacao:.2f}")
-    
-    # Cálculo final
-    valor_dolar = valor_reais / cotacao
-    
-    # Exibição dos Resultados
-    if item_nome:
-        st.subheader(f"Resumo do Gasto: {item_nome}")
-    else:
-        st.subheader("Resumo do Gasto")
-        
-    col1, col2 = st.columns(2)
-    col1.metric("Valor em R$", f"R$ {valor_reais:.2f}")
-    col2.metric("Total em Dólar", f"US$ {valor_dolar:.2f}")
-
+cotacao = buscar_cotacao()
+if cotacao is None:
+    cotacao = 5.15
+    st.warning(" API instável. Usando valor fixo de R$ 5,15 para os cálculos.")
 else:
-    st.info("Digite um valor acima de zero para ver a conversão.")
+    st.success(f" Cotação do dia: R$ {cotacao:.2f}")
 
-# Rodapé informativo
-st.caption("Dados de cotação fornecidos por AwesomeAPI / Yahoo Finance.")
+# --- FORMULÁRIO DE ENTRADA ---
+with st.expander(" Adicionar Novo Gasto", expanded=True):
+    col1, col2, col3 = st.columns([2, 1, 1])
+    
+    with col1:
+        novo_item = st.text_input("Item/Produto", placeholder="Ex: Passagem, Jantar...")
+    with col2:
+        novo_valor = st.number_input("Valor (R$)", min_value=0.0, step=0.50)
+    with col3:
+        st.write(" ") # Espaçamento
+        botao_adicionar = st.button("Adicionar à Lista")
+
+# Lógica para adicionar o item à lista
+if botao_adicionar:
+    if novo_item and novo_valor > 0:
+        # Salva o item na lista dentro da sessão
+        st.session_state.lista_gastos.append({
+            "item": novo_item,
+            "valor_rs": novo_valor,
+            "valor_us": novo_valor / cotacao
+        })
+        st.toast(f"'{novo_item}' adicionado!")
+    else:
+        st.error("Preencha o nome e o valor do item.")
+
+# --- EXIBIÇÃO DA LISTA E TOTAIS ---
+if st.session_state.lista_gastos:
+    st.divider()
+    st.subheader(" Itens Lançados")
+    
+    # Criando a tabela de exibição
+    for i, gasto in enumerate(st.session_state.lista_gastos):
+        c1, c2, c3, c4 = st.columns([3, 2, 2, 1])
+        c1.write(f"**{gasto['item']}**")
+        c2.write(f"R$ {gasto['valor_rs']:.2f}")
+        c3.write(f"US$ {gasto['valor_us']:.2f}")
+        if c4.button(key=f"del_{i}"):
+            st.session_state.lista_gastos.pop(i)
+            st.rerun()
+
+    # --- RESUMO TOTAL ---
+    st.divider()
+    total_rs = sum(item['valor_rs'] for item in st.session_state.lista_gastos)
+    total_us = sum(item['valor_us'] for item in st.session_state.lista_gastos)
+
+    col_t1, col_t2 = st.columns(2)
+    col_t1.metric("TOTAL EM REAIS", f"R$ {total_rs:.2f}")
+    col_t2.metric("TOTAL EM DÓLAR", f"US$ {total_us:.2f}", delta_color="inverse")
+
+    if st.button("Limpar Lista Completa"):
+        st.session_state.lista_gastos = []
+        st.rerun()
+else:
+    st.info("Sua lista está vazia. Adicione um item acima para começar.")
