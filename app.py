@@ -31,8 +31,8 @@ if st.session_state.gastos:
     
     # Integração com a API
     cotacao = buscar_cotacao_dolar()
-    if cotacao is not None:
+if cotacao is not None:
     valor_dolar = valor_reais / cotacao
     st.write(f"Valor em Dólar: $ {valor_dolar:.2f}")
-    else:
+else:
     st.error("Cotação indisponível no momento.")
