@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # 1. Configuração Inicial
-st.set_page_config(page_title="Gestor de Gastos", page_icon="💰", layout="wide")
+st.set_page_config(page_title="Gestor de Gastos", layout="wide")
 
 # Inicializa a lista de gastos na sessão se ela não existir
 if 'lista_gastos' not in st.session_state:
@@ -22,18 +22,18 @@ def buscar_cotacao():
         return None
 
 # --- TOPO DO APP ---
-st.title("💰 Gestor de Gastos Multitens")
+st.title(" Gestor de Gastos Multitens")
 
 cotacao = buscar_cotacao()
 if cotacao is None:
     cotacao = 5.15
-    st.warning("⚠️ Caso a API esteja instável, usando valor fixo de R$ 5,15 para os cálculos.")
+    st.warning("Caso a API esteja instável, usando valor fixo de R$ 5,15 para os cálculos.")
 else:
-    st.success(f"✅ Cotação obtida em tempo real: R$ {cotacao:.2f}")
+    st.success(f" Cotação obtida em tempo real: R$ {cotacao:.2f}")
 
 # --- FORMULÁRIO DE ENTRADA ---
 with st.container(border=True):
-    st.subheader("➕ Adicionar Novo Gasto")
+    st.subheader("Adicionar Novo Gasto")
     col1, col2, col3 = st.columns([3, 2, 1])
     
     with col1:
@@ -60,7 +60,7 @@ if botao_adicionar:
 # --- EXIBIÇÃO DA LISTA ---
 if st.session_state.lista_gastos:
     st.divider()
-    st.subheader("📋 Itens Lançados")
+    st.subheader(" Itens Lançados")
     
     # Variável para controlar a remoção fora do loop
     indice_para_remover = None
@@ -80,7 +80,7 @@ if st.session_state.lista_gastos:
         c3.write(f"US$ {gasto['valor_us']:.2f}")
         
         # Botão de excluir com chave única
-        if c4.button("❌", key=f"btn_{i}"):
+        if c4.button(key=f"btn_{i}"):
             indice_para_remover = i
 
     # Executa a remoção se o botão foi clicado
