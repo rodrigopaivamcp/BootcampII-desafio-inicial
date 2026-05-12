@@ -1,22 +1,21 @@
 import streamlit as st
 import requests
 
+
+@st.cache_data(ttl=3600)
 def buscar_cotacao_dolar_direto():
     try:
         url = "https://economia.awesomeapi.com.br/last/USD-BRL"
-        
         headers = {'User-Agent': 'Mozilla/5.0'}
-        
-        response = requests.get(url, headers=headers, timeout=15)
+        response = requests.get(url, headers=headers, timeout=10)
         
         if response.status_code == 200:
             dados = response.json()
             return float(dados["USDBRL"]["bid"])
-        else:
-            st.error(f"Erro da API: Status {response.status_code}")
-            return None
-    except Exception as e:
-        st.sidebar.error(f"Erro técnico: {e}")
+        
+        # Se der erro 429, vamos retornar um valor padrão ou None
+        return None
+    except:
         return None
 st.title("💰 Controle de Gastos (Versão Única)")
 
