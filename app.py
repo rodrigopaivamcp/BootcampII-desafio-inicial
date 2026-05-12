@@ -4,11 +4,15 @@ import requests
 def buscar_cotacao_dolar_direto():
     try:
         url = "https://economia.awesomeapi.com.br/last/USD-BRL"
-        response = requests.get(url, timeout=5)
+        headers = {'User-Agent': 'Mozilla/5.0'}
+        response = requests.get(url, headers=headers, timeout=10)
+        
         if response.status_code == 200:
-            return float(response.json()["USDBRL"]["bid"])
+            dados = response.json()
+            return float(dados["USDBRL"]["bid"])
         return None
-    except:
+    except Exception as e:
+        print(f"Erro detalhado: {e}")
         return None
 
 st.title("💰 Controle de Gastos (Versão Única)")
