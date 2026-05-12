@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 
 # Configuração da página (opcional, deixa o app mais bonito)
-st.set_page_config(page_title="Controle de Gastos", page_icon="💰")
+st.set_page_config(page_title="Controle de Gastos")
 
 @st.cache_data(ttl=3600)  # Guarda a cotação por 1 hora para evitar erro 429
 def buscar_cotacao_dolar_direto():
@@ -21,7 +21,7 @@ def buscar_cotacao_dolar_direto():
 
 # --- INTERFACE DO APP ---
 
-st.title("💰 Controle de Gastos (Versão Final)")
+st.title(" Controle de Gastos (Versão Final)")
 st.markdown("Converta seus gastos de Reais para Dólares de forma simples.")
 
 # 1. Entrada do Nome do Produto
@@ -39,9 +39,9 @@ if valor_reais > 0:
     # Verifica se a API funcionou ou se usamos o Fallback
     if cotacao is None:
         cotacao = 5.15 
-        st.warning("⚠️ Caso a API esteja instável, usando valor fixo de R$ 5,15 para o cálculo.")
+        st.warning(" Caso a API esteja instável, usando valor fixo de R$ 5,15 para o cálculo.")
     else:
-        st.success(f"✅ Cotação obtida em tempo real: R$ {cotacao:.2f}")
+        st.success(f" Cotação obtida em tempo real: R$ {cotacao:.2f}")
     
     # Cálculo final
     valor_dolar = valor_reais / cotacao
