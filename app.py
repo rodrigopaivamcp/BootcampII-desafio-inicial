@@ -17,15 +17,18 @@ def buscar_cotacao_dolar_direto():
         return None
     except:
         return None
-st.title("💰 Controle de Gastos (Versão Única)")
+st.title(" Controle de Gastos (Versão Única)")
 
 valor_reais = st.number_input("Valor em R$", min_value=0.0, value=0.0)
 
 cotacao = buscar_cotacao_dolar_direto()
 
-if cotacao is not None:
-    valor_dolar = valor_reais / cotacao
-    st.metric("Cotação", f"R$ {cotacao:.2f}")
-    st.metric("Total em Dólar", f"US$ {valor_dolar:.2f}")
+if cotacao is None:
+    cotacao = 5.15 
+    st.warning(" Nota: A API de cotação está instável. Usando valor padrão de R$ 5,15.")
 else:
-    st.error("Erro ao carregar cotação.")
+    st.success(f" Cotação obtida: R$ {cotacao:.2f}")
+
+if valor_reais > 0:
+    valor_dolar = valor_reais / cotacao
+    st.metric("Total em Dólar", f"US$ {valor_dolar:.2f}")
