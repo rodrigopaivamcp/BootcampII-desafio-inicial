@@ -1,5 +1,4 @@
 import streamlit as st
-from database import salvar_gasto_no_banco
 import requests
 
 st.set_page_config(page_title="Gestor de Gastos", layout="wide")
@@ -43,28 +42,12 @@ with st.container(border=True):
 
 if botao_adicionar:
     if novo_item and novo_valor > 0:
-        
-        valor_convertido_us = novo_valor / cotacao
-        
-        
-        import datetime
-        data_hoje = datetime.date.today()
-        
-        salvar_gasto_no_banco(
-            novo_item, 
-            novo_valor, 
-            data_hoje, 
-            "BRL", 
-            valor_convertido_us
-        )
-        
         st.session_state.lista_gastos.append({
             "item": novo_item,
             "valor_rs": novo_valor,
-            "valor_us": valor_convertido_us
+            "valor_us": novo_valor / cotacao
         })
-        st.success("Gasto salvo com sucesso no banco de dados!")
-        st.rerun()
+        st.rerun() 
     else:
         st.error("Por favor, preencha o nome e um valor maior que zero.")
 
