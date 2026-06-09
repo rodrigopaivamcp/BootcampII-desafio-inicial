@@ -1,11 +1,27 @@
 import streamlit as st
-from database import salvar_gasto_no_banco
+from database import (
+    salvar_gasto_no_banco,
+    listar_gastos_do_banco,
+    deletar_gasto_do_banco
+)
 import requests
 
 st.set_page_config(page_title="Gestor de Gastos", layout="wide")
 
 if 'lista_gastos' not in st.session_state:
+
+    dados_banco = listar_gastos_do_banco()
+
     st.session_state.lista_gastos = []
+
+    for linha in dados_banco:
+
+        st.session_state.lista_gastos.append({
+            "id": linha[0],
+            "item": linha[1],
+            "valor_rs": float(linha[2]),
+            "valor_us": float(linha[5])
+        })
 
 @st.cache_data(ttl=3600)
 def buscar_cotacao():
@@ -88,6 +104,12 @@ if st.session_state.lista_gastos:
         
 
         if c4.button("Remover", key=f"btn_{i}"):
+
+            gasto_id = gasto.get("id")
+
+            if gasto_id:
+                deletar_gasto_do_banco(gasto_id)
+
             indice_para_remover = i
 
 

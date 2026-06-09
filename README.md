@@ -14,3 +14,16 @@ Execute: `python -m pytest`
 - Python 3.10+
 - Pytest (Testes Unitários)
 - GitHub Actions (CI)
+
+## 👥 Integrantes do Grupo
+
+* Nome do Aluno A - Matrícula: XXXXX
+* Nome do Aluno B - Thales de Freitas Dias: 22510038
+
+## 🛠️ Tecnologias Utilizadas
+
+* Python
+* Streamlit
+* PostgreSQL / Supabase
+* GitHub Actions
+* Pytest
